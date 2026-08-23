@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://apnadigipoint.github.io/apna-digipoint/sitemap.xml
