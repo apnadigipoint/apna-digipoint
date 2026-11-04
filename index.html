@@ -158,6 +158,12 @@
 .service-content-note{margin:18px 0;background:#f7f9fc;border-left:4px solid #233b72;padding:14px;font:13px/1.6 Arial,sans-serif;color:#4b5563}
 .nav{overflow-x:auto;justify-content:flex-start;white-space:nowrap;-webkit-overflow-scrolling:touch}.nav a{flex:0 0 auto}
 @media(max-width:700px){.about-grid,.contact-details-grid{grid-template-columns:1fr}.policy-body{padding:15px}.ad-slot{min-height:70px}}
+
+/* Apna DigiPoint PAN booking and admin panel */
+.pan-wrap{margin:22px 0;background:#fff;border:1px solid #ddd;border-radius:12px;padding:18px;box-shadow:0 3px 14px #0000000d;font-family:Arial,sans-serif}
+.pan-wrap h2{margin:0 0 8px;color:#971b42}.pan-intro{color:#555;line-height:1.55;margin:0 0 14px}.pan-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.pan-tabs button,.pan-btn{border:0;border-radius:8px;padding:11px 15px;background:#971b42;color:white;font-weight:700;cursor:pointer}.pan-tabs button.secondary{background:#25324a}.pan-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pan-form label{display:block;font-weight:700;font-size:14px;color:#333}.pan-form input,.pan-form select,.pan-form textarea{width:100%;margin-top:6px;padding:11px;border:1px solid #bbb;border-radius:7px;font:16px Arial}.pan-form .full{grid-column:1/-1}.pan-note{background:#fff8e8;border:1px solid #efd59a;padding:11px;border-radius:8px;font-size:13px;line-height:1.5;margin:12px 0}.pan-result{margin-top:12px;padding:12px;border-radius:8px;background:#eef7ef;display:none;line-height:1.6;overflow-wrap:anywhere}.pan-error{background:#fff0f0;color:#8b1e1e}.pan-admin-card{border:1px solid #ddd;border-radius:9px;padding:14px;margin-top:12px}.pan-admin-card table{width:100%;border-collapse:collapse;font-size:13px}.pan-admin-card th,.pan-admin-card td{padding:8px;border-bottom:1px solid #ddd;text-align:left;vertical-align:top}.pan-admin-card select{padding:7px;max-width:160px}.pan-hidden{display:none!important}.pan-status{font-weight:700;color:#175c2b}
+@media(max-width:600px){.pan-form{grid-template-columns:1fr}.pan-form .full{grid-column:auto}.pan-admin-card{overflow-x:auto}}
+
 </style>
 
 <meta name="theme-color" content="#ffffff">
@@ -471,6 +477,47 @@
 <section class="footer-info"><b>Welcome to Apna DigiPoint</b><br>Jobs / Recruitment / Admission / Admit Card / Results / Online Citizen Services की जानकारी एक जगह उपलब्ध कराने का प्रयास।<p class="disclaimer">Disclaimer: Apna DigiPoint किसी सरकारी विभाग का official portal नहीं है। सभी dates, eligibility, notices और application instructions संबंधित official website से verify करें।</p></section>
 </main>
 
+
+
+<section class="pan-wrap" id="pan-booking">
+  <h2>🪪 PAN Card Booking & Status</h2>
+  <p class="pan-intro">Apna DigiPoint पर PAN सेवा के लिए अपनी request भेजें और Registration ID से स्थिति देखें।</p>
+  <div class="pan-note"><b>सेवा शुल्क:</b> ₹150 (सरकारी/पोर्टल शुल्क, यदि लागू हो, अलग)। यह केवल Apna DigiPoint की service request है; PAN आवेदन संबंधित अधिकृत/आधिकारिक माध्यम से ही किया जाएगा। अभी इस फॉर्म में Aadhaar या PAN नंबर/दस्तावेज़ अपलोड न करें।</div>
+  <div class="pan-tabs">
+    <button type="button" onclick="panShow('panNew')">नई Booking</button>
+    <button type="button" class="secondary" onclick="panShow('panTrack')">Status Check</button>
+    <button type="button" class="secondary" onclick="panShow('panAdminLogin')">Admin Login</button>
+  </div>
+  <div id="panNew">
+    <form id="panBookingForm" class="pan-form">
+      <label>ग्राहक का नाम<input name="customerName" required maxlength="80" autocomplete="name"></label>
+      <label>मोबाइल नंबर<input name="mobile" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर"></label>
+      <label>आवेदन का प्रकार<select name="requestType" required><option value="">चुनें</option><option>New PAN</option><option>PAN Correction</option></select></label>
+      <label id="panCorrectionLabel" class="pan-hidden">Correction में क्या बदलना है?<input name="correctionDetails" maxlength="200" placeholder="जैसे नाम / जन्मतिथि / फोटो"></label>
+      <div class="full"><button class="pan-btn" type="submit" id="panSubmitBtn">Booking Request भेजें</button></div>
+    </form>
+    <div id="panBookingResult" class="pan-result" role="status"></div>
+  </div>
+  <div id="panTrack" class="pan-hidden">
+    <form id="panTrackForm" class="pan-form">
+      <label class="full">Registration ID<input name="trackingId" required maxlength="30" placeholder="अपनी Booking ID डालें"></label>
+      <div class="full"><button class="pan-btn" type="submit">Status देखें</button></div>
+    </form>
+    <div id="panTrackResult" class="pan-result" role="status"></div>
+  </div>
+  <div id="panAdminLogin" class="pan-hidden">
+    <p class="pan-intro">केवल अधिकृत Admin के लिए। Firebase Authentication का Email/Password इस्तेमाल करें।</p>
+    <form id="panAdminForm" class="pan-form">
+      <label class="full">Admin Email<input name="email" type="email" required autocomplete="username" value="apnadigipoint@gmail.com"></label>
+      <label class="full">Password<input name="password" type="password" required autocomplete="current-password"></label>
+      <div class="full"><button class="pan-btn" type="submit">Admin Login</button></div>
+    </form>
+    <div id="panAdminMessage" class="pan-result" role="status"></div>
+    <div id="panAdminPanel" class="pan-hidden">
+      <div class="pan-admin-card"><b>Admin Dashboard — PAN Requests</b> <button type="button" class="pan-btn" id="panRefreshBtn">Refresh</button><button type="button" class="pan-btn" id="panAdminLogout" style="background:#25324a">Logout</button><div id="panAdminRows">Loading…</div></div>
+    </div>
+  </div>
+</section>
 
 <footer><div class="footer-grid">
 <div><h3>Page</h3><a href="#home">Home</a><a href="#latest">Latest Jobs</a><a href="#results">Results</a><a href="#admit">Admit Card</a><a href="#services">Online Services</a></div>
@@ -981,4 +1028,24 @@ async function copyEmail(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeEmailModal()});
 var emailModal=document.getElementById('emailModal');if(emailModal)emailModal.addEventListener('click',function(e){if(e.target===this)closeEmailModal()});
-</script></body></html>
+</script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, orderBy, updateDoc, writeBatch, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyB4nODQ8Ct4sAsT5NYMQpvWdNmtnl0vft4",authDomain:"apna-digipoint.firebaseapp.com",projectId:"apna-digipoint",storageBucket:"apna-digipoint.firebasestorage.app",messagingSenderId:"580232380698",appId:"1:580232380698:web:2747dba543f096db69eca3",measurementId:"G-GDD9S7PRME"};
+const ADMIN_UID="CtXiCg9BRJhLuQeSpK8ixi38xUv1";
+const app=initializeApp(firebaseConfig); const auth=getAuth(app); const db=getFirestore(app);
+const $=id=>document.getElementById(id); const show=(el,msg,error=false)=>{el.style.display='block';el.classList.toggle('pan-error',error);el.textContent=msg};
+window.panShow=id=>{['panNew','panTrack','panAdminLogin'].forEach(x=>$(x).classList.toggle('pan-hidden',x!==id));};
+const typeSelect=document.querySelector('#panBookingForm [name="requestType"]');
+typeSelect.addEventListener('change',()=> $('panCorrectionLabel').classList.toggle('pan-hidden',typeSelect.value!=='PAN Correction'));
+$('panBookingForm').addEventListener('submit',async e=>{e.preventDefault();const f=e.currentTarget;const b=$('panSubmitBtn');b.disabled=true;b.textContent='भेजा जा रहा है…';const out=$('panBookingResult');out.style.display='none';try{const d=new FormData(f);const name=String(d.get('customerName')).trim();const mobile=String(d.get('mobile')).trim();const requestType=String(d.get('requestType'));const correctionDetails=String(d.get('correctionDetails')||'').trim();if(!/^[6-9][0-9]{9}$/.test(mobile))throw new Error('कृपया सही 10 अंकों का मोबाइल नंबर डालें।');if(requestType==='PAN Correction'&&!correctionDetails)throw new Error('Correction का विवरण भरें।');const ref=doc(collection(db,'panRequests'));const batch=writeBatch(db);batch.set(ref,{trackingId:ref.id,customerName:name,mobile,requestType,correctionDetails:requestType==='PAN Correction'?correctionDetails:'',status:'Received',createdAt:serverTimestamp()});batch.set(doc(db,'panTracking',ref.id),{trackingId:ref.id,status:'Received',createdAt:serverTimestamp()});await batch.commit();show(out,'आपकी request सफलतापूर्वक दर्ज हुई। Registration ID: '+ref.id+' — इसे संभालकर रखें। Status Check में इसी ID से स्थिति देखें।');f.reset();$('panCorrectionLabel').classList.add('pan-hidden');}catch(err){show(out,'Request नहीं भेजी गई: '+(err.message||'कृपया Firestore Rules और इंटरनेट जाँचें।'),true);}finally{b.disabled=false;b.textContent='Booking Request भेजें';}});
+$('panTrackForm').addEventListener('submit',async e=>{e.preventDefault();const id=String(new FormData(e.currentTarget).get('trackingId')).trim();const out=$('panTrackResult');out.style.display='none';try{const snap=await getDoc(doc(db,'panTracking',id));if(!snap.exists()){show(out,'यह Registration ID नहीं मिली। ID दोबारा जाँचें।',true);return;}const d=snap.data();show(out,'Registration ID: '+id+' | वर्तमान स्थिति: '+d.status);}catch(err){show(out,'Status नहीं मिल सका। Firestore Rules प्रकाशित हुए हैं या नहीं, जाँचें।',true);}});
+$('panAdminForm').addEventListener('submit',async e=>{e.preventDefault();const d=new FormData(e.currentTarget);const out=$('panAdminMessage');try{const cred=await signInWithEmailAndPassword(auth,String(d.get('email')).trim(),String(d.get('password')));if(cred.user.uid!==ADMIN_UID){await signOut(auth);throw new Error('यह अकाउंट इस वेबसाइट का अधिकृत Admin नहीं है।');}show(out,'Admin Login सफल।');$('panAdminPanel').classList.remove('pan-hidden');await loadRequests();}catch(err){show(out,'Login नहीं हुआ: '+(err.message||'Email/Password जाँचें।'),true);}});
+onAuthStateChanged(auth,user=>{if(user&&user.uid===ADMIN_UID){$('panAdminPanel').classList.remove('pan-hidden');loadRequests().catch(()=>{});}else $('panAdminPanel').classList.add('pan-hidden');});
+async function loadRequests(){const root=$('panAdminRows');root.textContent='Loading…';try{const q=query(collection(db,'panRequests'),orderBy('createdAt','desc'));const snaps=await getDocs(q);if(snaps.empty){root.textContent='अभी कोई PAN booking नहीं है।';return;}const table=document.createElement('table');table.innerHTML='<thead><tr><th>ग्राहक</th><th>मोबाइल</th><th>प्रकार</th><th>Registration ID</th><th>Status</th><th>Update</th></tr></thead>';const body=document.createElement('tbody');snaps.forEach(s=>{const d=s.data();const tr=document.createElement('tr');const vals=[d.customerName,d.mobile,d.requestType+(d.correctionDetails?' — '+d.correctionDetails:''),s.id];vals.forEach(v=>{const td=document.createElement('td');td.textContent=v||'';tr.appendChild(td);});const statusTd=document.createElement('td');const sel=document.createElement('select');['Received','Under Process','Document Required','Submitted','Completed','Rejected'].forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;o.selected=v===d.status;sel.appendChild(o);});statusTd.appendChild(sel);tr.appendChild(statusTd);const actionTd=document.createElement('td');const save=document.createElement('button');save.className='pan-btn';save.textContent='Save';save.addEventListener('click',async()=>{save.disabled=true;try{const batch=writeBatch(db);batch.update(doc(db,'panRequests',s.id),{status:sel.value,updatedAt:serverTimestamp()});batch.update(doc(db,'panTracking',s.id),{status:sel.value,updatedAt:serverTimestamp()});await batch.commit();save.textContent='Saved';}catch(err){alert('Status update नहीं हुआ: '+err.message);save.disabled=false;}});actionTd.appendChild(save);tr.appendChild(actionTd);body.appendChild(tr);});table.appendChild(body);root.replaceChildren(table);}catch(err){root.textContent='Requests नहीं खुलीं: '+err.message;}}
+$('panRefreshBtn').addEventListener('click',loadRequests);$('panAdminLogout').addEventListener('click',async()=>{await signOut(auth);$('panAdminPanel').classList.add('pan-hidden');show($('panAdminMessage'),'आप Logout हो गए हैं।');});
+</script>
+
+</body></html>
